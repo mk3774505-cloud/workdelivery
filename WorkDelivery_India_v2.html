@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WorkDelivery India</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#eef3f8;color:#182230}.app{max-width:520px;margin:auto;background:#fff;min-height:100vh}.screen{padding:20px}.hide{display:none!important}
+.login{min-height:100vh;background:linear-gradient(150deg,#1264e8,#073b91);color:#fff;padding:30px 22px}.brand{font-size:30px;font-weight:800;margin:25px 0}.tag{opacity:.9;margin-bottom:28px}.box{background:#fff;color:#182230;border-radius:20px;padding:20px}.box h2{margin-top:0}.input,select{width:100%;padding:13px;margin:7px 0;border:1px solid #dce2ea;border-radius:10px;font-size:15px}.btn{border:0;border-radius:10px;padding:12px 15px;font-weight:700;cursor:pointer}.primary{background:#1264e8;color:white}.green{background:#138a4a;color:white}.light{background:#eef4ff;color:#1264e8}.full{width:100%;margin-top:8px}.link{color:#1264e8;text-align:center;margin:14px 0;cursor:pointer;font-size:14px}
+header{background:#1264e8;color:#fff;padding:20px;border-radius:0 0 22px 22px}.top{display:flex;justify-content:space-between}.logo{font-size:22px;font-weight:800}.hello{margin-top:18px}.money{font-size:30px;font-weight:800;margin-top:5px}
+main{padding:17px}.title{display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px}.title h2{font-size:19px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}.card{background:#f5f8fc;padding:15px;border-radius:15px}.card b{display:block;font-size:22px;margin-top:5px}.muted{font-size:12px;color:#6b7280}.order{border:1px solid #e2e7ee;border-radius:15px;padding:14px;margin:10px 0}.oh{display:flex;justify-content:space-between}.status{font-size:11px;background:#e9f7ee;color:#148244;padding:5px 8px;border-radius:20px}.route{font-size:13px;line-height:1.8;margin:10px 0;color:#566273}.actions{display:flex;gap:7px}.actions .btn{flex:1}
+nav{position:sticky;bottom:0;background:#fff;border-top:1px solid #e6eaf0;display:flex;justify-content:space-around;padding:9px 2px}nav button{border:0;background:none;color:#697586;font-size:11px}nav .active{color:#1264e8;font-weight:700}
+.page{display:none}.page.active{display:block}.admin{background:#111827;color:#fff;padding:18px;border-radius:15px;margin-bottom:15px}.admin b{font-size:25px}.table{width:100%;border-collapse:collapse;font-size:12px}.table td,.table th{padding:9px;border-bottom:1px solid #e7ebf0;text-align:left}.search{padding:12px;width:100%;border:1px solid #dce2ea;border-radius:10px}
+.toast{position:fixed;bottom:75px;left:50%;transform:translateX(-50%);background:#182230;color:#fff;padding:11px 16px;border-radius:10px;display:none;font-size:13px;z-index:5}
+</style></head>
+<body>
+<div id="login" class="login">
+ <div class="brand">🚚 WorkDelivery</div><div class="tag">पूरे India में delivery work platform</div>
+ <div class="box" id="loginBox">
+  <h2>Login</h2><input class="input" id="lemail" placeholder="Mobile / Email"><input class="input" id="lpass" type="password" placeholder="Password">
+  <button class="btn primary full" onclick="login()">Login</button><div class="link" onclick="toggleAuth()">New user? Signup करें</div>
+  <button class="btn light full" onclick="demoAdmin()">Demo Admin Login</button>
+ </div>
+ <div class="box hide" id="signupBox">
+  <h2>Create Account</h2><input class="input" id="sname" placeholder="पूरा नाम"><input class="input" id="sphone" placeholder="Mobile Number">
+  <select id="state"><option value="">State चुनें</option><option>Bihar</option><option>Uttar Pradesh</option><option>Delhi</option><option>Maharashtra</option><option>West Bengal</option><option>Rajasthan</option><option>Madhya Pradesh</option><option>Other India State</option></select>
+  <input class="input" id="spass" type="password" placeholder="Password"><button class="btn primary full" onclick="signup()">Signup</button>
+  <div class="link" onclick="toggleAuth()">Already account? Login</div>
+ </div>
+</div>
+
+<div id="app" class="app hide">
+<header><div class="top"><div class="logo">🚚 WorkDelivery</div><div>🔔</div></div><div class="hello">नमस्ते, <b id="userName">Delivery Partner</b> 👋</div><div class="muted" style="color:#dce9ff;margin-top:5px">Available balance</div><div class="money">₹<span id="balance">1250</span></div></header>
+<main>
+<section id="home" class="page active">
+ <div class="title"><h2>Dashboard</h2><span class="muted" id="loc">📍 India</span></div>
+ <div class="cards"><div class="card">📦<b>12</b><span class="muted">Completed</span></div><div class="card">🛵<b>3</b><span class="muted">Pending</span></div><div class="card">💰<b>₹850</b><span class="muted">Today</span></div><div class="card">⭐<b>4.8</b><span class="muted">Rating</span></div></div>
+ <div class="title" style="margin-top:23px"><h2>Available Orders</h2></div>
+ <div id="ordersList"></div>
+</section>
+<section id="orders" class="page"><div class="title"><h2>Order History</h2></div><input class="search" placeholder="Order ID / City search" oninput="filterOrders(this.value)"><div id="history"></div></section>
+<section id="earnings" class="page"><div class="title"><h2>Earnings & Withdrawal</h2></div><div class="card"><span class="muted">Available balance</span><b>₹<span id="ebal">1250</span></b></div>
+ <div class="box" style="padding:0;margin-top:14px"><h3>Withdrawal</h3><input class="input" id="amount" type="number" placeholder="Amount ₹"><input class="input" id="upi" placeholder="UPI ID (demo)"><button class="btn green full" onclick="withdraw()">Withdraw</button><p class="muted">Demo: वास्तविक बैंक/UPI transfer के लिए secure backend/payment gateway जरूरी है।</p></div>
+ <h3>Payment History</h3><div id="payments"></div>
+</section>
+<section id="profile" class="page"><div class="title"><h2>Profile</h2></div><input class="input" id="pname" placeholder="Name"><input class="input" id="pphone" placeholder="Mobile"><select id="pstate"><option>Bihar</option><option>Uttar Pradesh</option><option>Delhi</option><option>Maharashtra</option><option>West Bengal</option><option>Rajasthan</option><option>Other India State</option></select><input class="input" id="pcity" placeholder="City / District"><input class="input" id="paddress" placeholder="Delivery address"><button class="btn primary full" onclick="saveProfile()">Save Profile</button><button class="btn light full" onclick="logout()">Logout</button></section>
+<section id="admin" class="page"><div class="admin"><div>ADMIN PANEL</div><b>WorkDelivery India</b><div style="margin-top:8px">Users: 1,248 · Orders: 8,426</div></div><div class="title"><h2>Manage Orders</h2></div><div id="adminOrders"></div><div class="title"><h2>Users</h2></div><table class="table"><tr><th>Name</th><th>State</th><th>Status</th></tr><tr><td>Rahul Kumar</td><td>Bihar</td><td>Active</td></tr><tr><td>Amit Singh</td><td>Delhi</td><td>Active</td></tr><tr><td>Priya Das</td><td>West Bengal</td><td>Pending</td></tr></table></section>
+</main>
+<nav><button class="active" onclick="page('home',this)">🏠<br>Home</button><button onclick="page('orders',this)">📦<br>Orders</button><button onclick="page('earnings',this)">💰<br>Earning</button><button onclick="page('profile',this)">👤<br>Profile</button><button id="adminNav" class="hide" onclick="page('admin',this)">⚙️<br>Admin</button></nav>
+</div><div id="toast" class="toast"></div>
+<script>
+let balance=1250, isAdmin=false;
+const orders=[
+{id:'WD1024',from:'Patna Market, Bihar',to:'Kankarbagh, Patna',fee:80,status:'New'},
+{id:'WD1025',from:'Boring Road, Patna',to:'Rajendra Nagar, Patna',fee:65,status:'New'},
+{id:'WD1026',from:'Gandhi Maidan, Patna',to:'Danapur, Bihar',fee:95,status:'New'}
+];
+const historyData=[{id:'WD1021',from:'Patna Junction',to:'Fraser Road',fee:75,status:'Delivered'},{id:'WD1022',from:'Bailey Road',to:'Danapur',fee:90,status:'Delivered'}];
+function toast(x){let t=document.getElementById('toast');t.textContent=x;t.style.display='block';setTimeout(()=>t.style.display='none',1800)}
+function toggleAuth(){document.getElementById('loginBox').classList.toggle('hide');document.getElementById('signupBox').classList.toggle('hide')}
+function signup(){let n=document.getElementById('sname').value,p=document.getElementById('sphone').value;if(!n||!p)return toast('नाम और मोबाइल भरें');localStorage.wdUser=n;localStorage.wdPhone=p;start(n);toast('Signup सफल हुआ')}
+function login(){let n=localStorage.wdUser||'Delivery Partner';start(n)}
+function demoAdmin(){isAdmin=true;start('Admin');document.getElementById('adminNav').classList.remove('hide');page('admin',document.getElementById('adminNav'))}
+function start(n){document.getElementById('login').classList.add('hide');document.getElementById('app').classList.remove('hide');document.getElementById('userName').textContent=n;document.getElementById('pname').value=n;render()}
+function page(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');window.scrollTo(0,0)}
+function orderCard(o,admin=false){return `<div class="order"><div class="oh"><b>#${o.id}</b><span class="status">${o.status}</span></div><div class="route">📍 Pickup: <b>${o.from}</b><br>🏠 Drop: <b>${o.to}</b><br>💰 Fee: <b>₹${o.fee}</b></div>${admin?`<button class="btn green full" onclick="toast('Order status updated')">Approve / Assign</button>`:`<div class="actions"><button class="btn primary" onclick="accept('${o.id}',this)">Accept</button><button class="btn light" onclick="map('${o.to}')">📍 Map</button></div>`}</div>`}
+function render(){document.getElementById('ordersList').innerHTML=orders.map(orderCard).join('');document.getElementById('history').innerHTML=historyData.map(orderCard).join('');document.getElementById('adminOrders').innerHTML=orders.map(o=>orderCard(o,true)).join('');document.getElementById('balance').textContent=balance;document.getElementById('ebal').textContent=balance}
+function accept(id,b){let o=orders.find(x=>x.id===id);o.status='Accepted';historyData.unshift({...o,status:'Accepted'});render();toast('Order accepted: '+id)}
+function map(x){toast('Map location: '+x)}
+function filterOrders(q){document.getElementById('history').innerHTML=historyData.filter(o=>(o.id+o.from+o.to).toLowerCase().includes(q.toLowerCase())).map(orderCard).join('')}
+function withdraw(){let a=Number(document.getElementById('amount').value),u=document.getElementById('upi').value;if(!a||a<100||a>balance)return toast('₹100 से balance तक amount डालें');if(!u)return toast('UPI ID डालें');balance-=a;document.getElementById('payments').innerHTML+=`<div class="order">Withdrawal request: <b>₹${a}</b><br><span class="muted">UPI: ${u} · Pending</span></div>`;render();toast('Withdrawal request भेज दी गई')}
+function saveProfile(){document.getElementById('userName').textContent=document.getElementById('pname').value||'Delivery Partner';toast('Profile saved')}
+function logout(){location.reload()}
+window.onload=()=>{if(localStorage.wdUser){}};
+</script></body></html>
